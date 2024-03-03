@@ -29,12 +29,15 @@ env = Environment(
 ###########################################################
 
 def clang_format(target, source, env):
-    return env.Execute("clang-format i $SOURCE")
+    return env.Execute('clang-format i $SOURCE')
 
-COMMAND = COMMAND_LINE_TARGETS[0] if COMMAND_LINE_TARGETS else ""
+COMMAND = COMMAND_LINE_TARGETS[0] if COMMAND_LINE_TARGETS else ''
 
-if COMMAND == "clean":
+if COMMAND == 'clean':
     AlwaysBuild(Command('#/clean', [], 'rm -rf build/*'))
 
-elif COMMAND == "format":
-    SConscript('scons/format.scons', exports={'env': env})
+elif COMMAND == 'format' or COMMAND == 'lint':
+    SConscript('scons/format_lint.scons', exports={'env': env})
+
+else:
+    AlwaysBuild(Command('#/build', [], ''))
