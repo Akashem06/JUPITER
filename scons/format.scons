@@ -1,0 +1,24 @@
+import subprocess
+import glob
+
+Import('env')
+
+def run_format(target, source, env):
+    clang_format_cmd = 'clang-format -i'
+    if len(CFILES) > 0:
+        print('Formatting .c files\n')
+        subprocess.run(f'{clang_format_cmd} {CFILES_STR}', shell=True)
+    
+    if len(HFILES) > 0:
+        print('Formatting .h files\n')
+        subprocess.run(f'{clang_format_cmd} {HFILES_STR}', shell=True)
+
+ROOT = Dir('#')
+CFILES = glob.glob(f'{ROOT}/**/*.c', recursive=True)
+CFILES_STR = ' '.join(CFILES)
+
+HFILES = glob.glob(f'{ROOT}/**/*.h', recursive=True)
+HFILES_STR = ' '.join(HFILES)
+
+Command('#/lint', [], run_format)
+Command('#/format', [], run_format)
