@@ -1,0 +1,35 @@
+import subprocess
+import glob
+
+Import('env')
+
+def run_format(target, source, env):
+    clang_format_cmd = 'clang-format -i'
+    if len(FILES) > 0:
+        print('Formatting .[ch] files\n')
+        result = subprocess.run(f'{clang_format_cmd} {FILES_STR}', shell=True)
+
+        if result.returncode == 0:
+            print("Formatting was successful")
+        else:
+            print("Formatting encountered errors or warnings")
+            Exit(1)
+    
+def run_lint(target, source, env): 
+    SUPPRESSIONS='--suppress=missingIncludeSystem --suppress=unusedFunction --suppress=missingInclude --suppress=unmatchedSuppression'
+    BASE_ARGS = '--enable=all --template=gcc --error-exitcode=1 --cppcheck-build-dir=cppcheckbuild -q --inline-suppr'
+
+    HEADER_FILES = glob.glob(f'{ROOT}/**/*.h', recursive = True)
+    HEADER_FILES = ' '.join(HEADER_FILES)
+    
+    print(f'Running Cppcheck\n')
+    subprocess.run(f'cppcheck {FILES_STR} {SUPPRESSIONS} {BASE_ARGS} {HEADER_FILES}', shell=True)
+
+
+ROOT = Dir('#')
+FILES = glob.glob(f'{ROOT}/**/*.[ch]', recursive=True)
+FILES_STR = ' '.join(FILES)
+
+
+Command('#/lint', [], run_lint)
+Command('#/format', [], run_format)
