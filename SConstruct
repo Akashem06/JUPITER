@@ -14,6 +14,8 @@ cflags = [
     '-Wno-unused-variable',
     '-Wno-unused-parameter',
     '-Wpointer-arith',
+    '-Isrc',
+    '-Iinc'
 ]
 
 env = Environment(
@@ -33,11 +35,19 @@ def clang_format(target, source, env):
 
 COMMAND = COMMAND_LINE_TARGETS[0] if COMMAND_LINE_TARGETS else ''
 
-if COMMAND == 'clean':
+if COMMAND == 'build':
+    SConscript('scons/build.scons', exports={'env': env})
+
+elif COMMAND == 'clean':
     AlwaysBuild(Command('#/clean', [], 'rm -rf build/*'))
 
 elif COMMAND == 'format' or COMMAND == 'lint':
     SConscript('scons/format_lint.scons', exports={'env': env})
 
-else:
-    AlwaysBuild(Command('#/build', [], ''))
+else: # Unknown command
+    SConscript('scons/build.scons', exports={'env': env})
+
+Help("build", "Build the project") 
+Help("clean", "Clean build artifacts")
+Help("format", "Format the code")
+Help("lint", "Lint the code")

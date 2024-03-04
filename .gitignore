@@ -1,2 +1,6 @@
 .sconsign.dblite
+
 build/
+*.o
+
+.vscode/
