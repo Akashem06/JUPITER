@@ -30,9 +30,6 @@ env = Environment(
 # Action Functions
 ###########################################################
 
-def clang_format(target, source, env):
-    return env.Execute('clang-format i $SOURCE')
-
 COMMAND = COMMAND_LINE_TARGETS[0] if COMMAND_LINE_TARGETS else ''
 
 if COMMAND == 'build':
@@ -47,7 +44,18 @@ elif COMMAND == 'format' or COMMAND == 'lint':
 else: # Unknown command
     SConscript('scons/build.scons', exports={'env': env})
 
-Help("build", "Build the project") 
-Help("clean", "Clean build artifacts")
-Help("format", "Format the code")
-Help("lint", "Lint the code")
+###########################################################
+# Custom Help Function
+###########################################################
+    
+Help('''
+Usage:
+  scons [OPTIONS]
+
+Options:
+  -h, --help      Show this help message
+  --clean         Clean the build directory
+  --format        Format the code
+  --lint          Run linting on the code
+  --build         Build the project
+''')

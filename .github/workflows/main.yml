@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  # Will run on all PR's and pushes to master
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v3
+      - name: Running build generation
+        run: |
+          scons build
+
+      - name: Running formatting check
+        run: |
+          scons format
+          if [[ $(git diff --name-only) ]] ; then 
+              echo -e "\n unformatted files:";
+              git diff --name-only;
+              exit 1;
+            fi
+
+      - name: Running static analysis
+        run: scons lint
