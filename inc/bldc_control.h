@@ -3,12 +3,12 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdio.h>
 
 typedef enum { PHASE_A = 0, PHASE_B, PHASE_C } PhaseIndex;
 
 // config class
 typedef struct {
-    
 } PhaseConfig_t;
 
 /**
