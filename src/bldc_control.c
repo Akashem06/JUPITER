@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 Initialize_PWM();
-Initialize_GPIO(); 
+Initialize_GPIO();
 Initialize_Timer();
 Initialize_ADC();
 
@@ -13,9 +13,7 @@ static void prv_bldc_zcross_detection() {
     // and checking for a change in sign.
 }
 
-void bldc_6step_init() {
-
-}
+void bldc_6step_init() {}
 
 void run_bldc_6step() {
     while (1) {
@@ -40,6 +38,6 @@ bldc_6step_commutation() {
             Activate_Phase_U();
             Deactivate_Phase_V();
             break;
-        // ... Repeat for all six rotor positions
+            // ... Repeat for all six rotor positions
     }
 }
