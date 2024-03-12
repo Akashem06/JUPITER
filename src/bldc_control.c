@@ -1,7 +1,5 @@
 #include "bldc_control.h"
 
-#include <stdio.h>
-
 Initialize_PWM();
 Initialize_GPIO();
 Initialize_Timer();
@@ -28,7 +26,7 @@ void run_bldc_6step() {
     }
 }
 
-bldc_6step_commutation() {
+void bldc_6step_commutation() {
     switch (currentRotorPosition) {
         case Position_1:
             Activate_Phase_U();

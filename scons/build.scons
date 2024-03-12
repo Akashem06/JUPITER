@@ -3,10 +3,10 @@ import glob
 Import('env')
 
 ROOT = Dir('#')
-CFILES = glob.glob(f'{ROOT}/**/*.c', recursive=True)
+CFILES = glob.glob(f'{ROOT}/src/*.c', recursive=True)
 HFILES = glob.glob(f'{ROOT}/**/*.h', recursive=True)
 
 env.VariantDir('build', 'src')
 
-objects = env.Object(target=f'{ROOT}/build/obj/BLDC_control.o', source=CFILES)
-binary = env.Program(f'{ROOT}/build/bin/BLDC_control', objects)
+binary = env.Program(target=f'{ROOT}/build/bin/BLDC_control', source=CFILES)
+
