@@ -6,22 +6,16 @@ static void prv_bldc_zcross_detection() {
     // and checking for a change in sign.
 }
 
+// User must define phaseA/phaseB/phaseC pins + timer
 void bldc_6step_init() {
-    PhaseConfig_t phaseA;
+    PhaseConfig_t phaseA = {.in_a =, .sd_a =, zcross_a =, .pwm_a = };
     PhaseConfig_t phaseB;
     PhaseConfig_t phaseC;
+
+    gpio_set_state(&phaseA.sd_a, GPIO_STATE_HIGH);
 }
 
-void run_bldc_6step() {
-    while (1) {
-        if (IN_A) {
-            updateRotorPosition();
-            CommutateMotor();
-        } else if (IN_B)
-
-        Adjust_PWM_Duty_Cycle();
-    }
-}
+void run_bldc_6step() {}
 
 void bldc_6step_commutation() {
     switch (currentRotorPosition) {

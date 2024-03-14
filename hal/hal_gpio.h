@@ -26,8 +26,10 @@ typedef struct {
     GpioAddress gpio_address;
     GpioMode gpio_mode;
     GpioState gpio_state;
-    GpioState (*gpio_get_state)(GpioAddress gpio_address);
 } Gpio;
+
+GpioState gpio_get_state(Gpio *gpio);
+void gpio_set_state(Gpio *gpio, GpioState gpio_state);
 
 void gpio_init(Gpio *gpio){};
 

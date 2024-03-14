@@ -19,19 +19,16 @@ void timer_init(Timer *timer) {
 //** EXAMPLE INITILIZATION OF TIMERS** //
 
 Timer timer_example_phaseA = {.current_time = 0,
-                                .prescaler = 1000000,  // Typically people go for 1 Mhz (1 us)
-                                .period = 0xffffffff,
-                                .pwm_duty_cycle = 33
-                                };
-                                
+                              .prescaler = 1000000,  // Typically people go for 1 Mhz (1 us)
+                              .period = 0xffffffff,
+                              .pwm_duty_cycle = 33};
+
 Timer timer_example_phaseB = {.current_time = 0,
-                                .prescaler = 1000000,  // Typically people go for 1 Mhz (1 us)
-                                .period = 0xffffffff,
-                                .pwm_duty_cycle = 33
-                                };
-                                
+                              .prescaler = 1000000,  // Typically people go for 1 Mhz (1 us)
+                              .period = 0xffffffff,
+                              .pwm_duty_cycle = 33};
+
 Timer timer_example_phaseC = {.current_time = 0,
-                                .prescaler = 1000000,  // Typically people go for 1 Mhz (1 us)
-                                .period = 0xffffffff,
-                                .pwm_duty_cycle = 33
-                                };
+                              .prescaler = 1000000,  // Typically people go for 1 Mhz (1 us)
+                              .period = 0xffffffff,
+                              .pwm_duty_cycle = 33};
