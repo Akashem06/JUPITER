@@ -1,30 +1,21 @@
 #include "bldc_control.h"
 
-Initialize_PWM();
-Initialize_GPIO();
-Initialize_Timer();
-Initialize_ADC();
-
 static void prv_bldc_zcross_detection() {
     // Implement logic to detect when the back-EMF crosses zero
     // This may involve comparing the current and previous back-EMF values
     // and checking for a change in sign.
 }
 
-void bldc_6step_init() {}
+// User must define phaseA/phaseB/phaseC pins + timer
+void bldc_6step_init() {
+    PhaseConfig_t phaseA = {.in_a =, .sd_a =, zcross_a =, .pwm_a = };
+    PhaseConfig_t phaseB;
+    PhaseConfig_t phaseC;
 
-void run_bldc_6step() {
-    while (1) {
-        voltage = Read_ADC();
-
-        if (voltage crosses zero) {
-            updateRotorPosition();
-            CommutateMotor();
-        }
-
-        Adjust_PWM_Duty_Cycle();
-    }
+    gpio_set_state(&phaseA.sd_a, GPIO_STATE_HIGH);
 }
+
+void run_bldc_6step() {}
 
 void bldc_6step_commutation() {
     switch (currentRotorPosition) {

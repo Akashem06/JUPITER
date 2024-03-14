@@ -5,10 +5,33 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#include "hal_gpio.h"
+#include "hal_tim.h"
+
 typedef enum { PHASE_A = 0, PHASE_B, PHASE_C } PhaseIndex;
 
 // config class
 typedef struct {
+    union {
+        struct {
+            Gpio in_a;
+            Gpio sd_a;  // Shutdown pin. Enabled low
+            Gpio zcross_a;
+            Timer pwm_a;
+        } phase_A;
+        struct {
+            Gpio in_b;
+            Gpio sd_b;  // Shutdown pin. Enabled low
+            Gpio zcross_b;
+            Timer pwm_b;
+        } phase_B;
+        struct {
+            Gpio in_c;
+            Gpio sd_c;  // Shutdown pin. Enabled low
+            Gpio zcross_c;
+            Timer pwm_c;
+        } phase_C;
+    };
 } PhaseConfig_t;
 
 /**
