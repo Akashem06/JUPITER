@@ -1,5 +1,3 @@
 #include "bldc_control.h"
 
-int main(void) {
-    return 0;
-}
+int main(void) { return 0; }
