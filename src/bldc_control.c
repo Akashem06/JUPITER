@@ -10,41 +10,27 @@ static const int commutation_table[6][3] = {
     {PHASE_A, PHASE_C, PHASE_B}   // Step 6
 };
 
-static PhaseConfig_t phase_config;
+static PhaseConfig_t *phase_config;
 
-void bldc_6step_init(void) {
-    // Initialize phase A
-    phase_config.phase_A.in_a = (Gpio){/* GPIO initialization details */};
-    phase_config.phase_A.sd_a = (Gpio){/* GPIO initialization details */};
-    phase_config.phase_A.zcross_a = (Gpio){/* GPIO initialization details */};
-    phase_config.phase_A.pwm_a = (Timer){/* Timer initialization details */};
-
-    // Initialize phase B
-    phase_config.phase_B.in_b = (Gpio){/* GPIO initialization details */};
-    phase_config.phase_B.sd_b = (Gpio){/* GPIO initialization details */};
-    phase_config.phase_B.zcross_b = (Gpio){/* GPIO initialization details */};
-    phase_config.phase_B.pwm_b = (Timer){/* Timer initialization details */};
-
-    // Initialize phase C
-    phase_config.phase_C.in_c = (Gpio){/* GPIO initialization details */};
-    phase_config.phase_C.sd_c = (Gpio){/* GPIO initialization details */};
-    phase_config.phase_C.zcross_c = (Gpio){/* GPIO initialization details */};
-    phase_config.phase_C.pwm_c = (Timer){/* Timer initialization details */};
-
-    // Set initial speed and direction
-    phase_config.speed = 30;
-    phase_config.reversed = false;
+JupiterStatus bldc_6step_init(uint16_t speed, PhaseConfig_t *user_config) {
+    if (user_config == NULL) {
+        return JUPITER_INVALID_ARGS;
+    }
+    phase_config = user_config;
+    return JUPITER_OK;
 }
 
 // Future expansion
-static void prv_read_voltages(int phaseVoltages[]) {}
+// static void prv_read_voltages(int phaseVoltages[]) {}
 
 // Zero crossing detection
-static void prv_zero_crossing(int phaseVoltages[], int zeroCrossings[]) {}
-
-static int prv_get_commutation_step(int zeroCrossings[]) {
-    return 0;
+static void prv_zero_crossing(int zeroCrossings[]) {
+    gpio_get_state(&phase_config->phase_A.zcross);
+    gpio_get_state(&phase_config->phase_B.zcross);
+    gpio_get_state(&phase_config->phase_C.zcross);
 }
+
+static int prv_get_commutation_step(int zeroCrossings[]) { return 0; }
 
 // Placeholder for commutating motor phases
 static void prv_commutate_motor(int commutationStep) {
@@ -61,10 +47,12 @@ static void prv_commutate_motor(int commutationStep) {
     // }
 }
 
-void set_bldc_6step_speed() {
+JupiterStatus set_bldc_6step_speed(uint16_t updated_speed) {
+    phase_config->speed = updated_speed;
     // Adjust motor speed as required
     // Example:
     // setMotorSpeed(speed); // Adjust PWM duty cycle based on speed value
+    return JUPITER_OK;
 }
 
 // Placeholder for implementing delay
@@ -74,22 +62,20 @@ void delay(int milliseconds) {
     // HAL_Delay(milliseconds);
 }
 
-void run_bldc_6step() {
+JupiterStatus run_bldc_6step() {
     // Detect zero crossings
     int zeroCrossings[3];
     prv_zero_crossing(zeroCrossings);
 
     // Determine commutation step
-    int commutationStep = prv_commutation_step(zeroCrossings);
+    int commutationStep = prv_get_commutation_step(zeroCrossings);
 
     // Commutate motor phases
     prv_commutate_motor(commutationStep);
 
-    // Adjust motor speed
-    set_bldc_6step_speed();
-
     // Implement safety features (e.g., overcurrent protection)
 
     // Delay to control commutation frequency
-    delay(COMMUTATION_PERIOD);  // Adjust with the desired commutation period
+    // delay(COMMUTATION_PERIOD);  // Adjust with the desired commutation period
+    return JUPITER_OK;
 }
