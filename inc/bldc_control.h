@@ -12,6 +12,8 @@ typedef enum { PHASE_A = 0, PHASE_B, PHASE_C } PhaseIndex;
 
 // config class
 typedef struct {
+    uint16_t speed;
+    bool reversed;
     union {
         struct {
             Gpio in_a;
@@ -47,6 +49,6 @@ void run_bldc_6step(void);
 /**
  * @brief Determines which magnetes to trigger depending on back EMF and zero-crossing detection
  */
-void bldc_6step_commutation(void);
+void set_bldc_6step_speed(void);
 
 #endif
