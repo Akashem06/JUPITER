@@ -2,19 +2,16 @@
 
 #include "hal_tim.h"
 
-uint32_t get_time_s_example(Timer *timer) { return timer->current_time; }
+uint32_t get_time_s(Timer *timer) { return timer->current_time; }
 
-void set_duty_cycle_example(Timer *timer, uint8_t duty_cycle) {
+void set_duty_cycle(Timer *timer, uint8_t duty_cycle) {
     if (duty_cycle > 100) {
         return;
     }
     timer->pwm_duty_cycle = duty_cycle;
 }
 
-void timer_init(Timer *timer) {
-    timer->get_time_s = get_delta_time_s;
-    timer->set_duty_cycle = set_duty_cycle_example;
-}
+void timer_init(Timer *timer) {}
 
 //** EXAMPLE INITILIZATION OF TIMERS** //
 

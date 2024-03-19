@@ -6,6 +6,8 @@ ROOT = Dir('#')
 CFILES = glob.glob(f'{ROOT}/**/*.c', recursive=True)
 HFILES = glob.glob(f'{ROOT}/**/*.h', recursive=True)
 
-env.VariantDir('build', 'src')
+# Generate object files from source files
+objs = [env.Object(target=f'{ROOT}/build/objs/{File(file).name[:-2]}.o', source=file) for file in CFILES]
 
-binary = env.Program(target=f'{ROOT}/build/bin/BLDC_control', source=CFILES)
+# Generate the binary in the build/bin directory
+binary = env.Program(target=f'{ROOT}/build/bin/BLDC_control', source=objs)
