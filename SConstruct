@@ -15,7 +15,8 @@ cflags = [
     '-Wno-unused-parameter',
     '-Wpointer-arith',
     '-Isrc',
-    '-Iinc'
+    '-Iinc',
+    '-Ihal'
 ]
 
 env = Environment(
