@@ -5,10 +5,10 @@
 uint32_t get_time_s(Timer *timer) { return timer->current_time; }
 
 void set_duty_cycle(Timer *timer, uint8_t duty_cycle) {
-    if (duty_cycle > 100) {
-        return;
-    }
-    timer->pwm_duty_cycle = duty_cycle;
+  if (duty_cycle > 100) {
+    return;
+  }
+  timer->pwm_duty_cycle = duty_cycle;
 }
 
 void timer_init(Timer *timer) {}

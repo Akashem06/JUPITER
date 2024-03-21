@@ -4,10 +4,10 @@
 #include <stdint.h>
 
 typedef struct {
-    uint32_t current_time;
-    uint32_t pwm_duty_cycle;
-    uint32_t prescaler;
-    uint32_t period;
+  uint32_t current_time;
+  uint32_t pwm_duty_cycle;
+  uint32_t prescaler;
+  uint32_t period;
 } Timer;
 
 uint32_t get_time_s(Timer *timer);

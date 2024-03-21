@@ -1,3 +1,7 @@
 BasedOnStyle:  Google
-IndentWidth: 4
-ColumnLimit: 125 
+IndentWidth: 2
+ColumnLimit: 100 
+BreakBeforeBinaryOperators: All
+ContinuationIndentWidth: 4
+BraceWrapping:
+  AfterEnum: false  

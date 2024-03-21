@@ -13,26 +13,26 @@ typedef enum { PHASE_A = 0, PHASE_B, PHASE_C } PhaseIndex;
 
 // config class
 typedef struct {
-    uint16_t speed;
-    bool reversed;
-    struct {
-        Gpio in;
-        Gpio sd;  // Shutdown pin. Enabled low
-        Gpio zcross;
-        Timer pwm;
-    } phase_A;
-    struct {
-        Gpio in;
-        Gpio sd;  // Shutdown pin. Enabled low
-        Gpio zcross;
-        Timer pwm;
-    } phase_B;
-    struct {
-        Gpio in;
-        Gpio sd;  // Shutdown pin. Enabled low
-        Gpio zcross;
-        Timer pwm;
-    } phase_C;
+  uint16_t speed;
+  bool reversed;
+  struct {
+    Gpio in;
+    Gpio sd;  // Shutdown pin. Enabled low
+    Gpio zcross;
+    Timer pwm;
+  } phase_A;
+  struct {
+    Gpio in;
+    Gpio sd;  // Shutdown pin. Enabled low
+    Gpio zcross;
+    Timer pwm;
+  } phase_B;
+  struct {
+    Gpio in;
+    Gpio sd;  // Shutdown pin. Enabled low
+    Gpio zcross;
+    Timer pwm;
+  } phase_C;
 } PhaseConfig_t;
 
 /**
