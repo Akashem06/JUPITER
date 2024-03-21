@@ -2,12 +2,12 @@
 
 // Define commutation table representing the commutation sequence
 static const int commutation_table[6][3] = {
-    {PHASE_A, PHASE_B, PHASE_C},  // Step 1
-    {PHASE_B, PHASE_A, PHASE_C},  // Step 2
-    {PHASE_B, PHASE_C, PHASE_A},  // Step 3
-    {PHASE_C, PHASE_B, PHASE_A},  // Step 4
-    {PHASE_C, PHASE_A, PHASE_B},  // Step 5
-    {PHASE_A, PHASE_C, PHASE_B}   // Step 6
+  { PHASE_A, PHASE_B, PHASE_C },  // Step 1
+  { PHASE_B, PHASE_A, PHASE_C },  // Step 2
+  { PHASE_B, PHASE_C, PHASE_A },  // Step 3
+  { PHASE_C, PHASE_B, PHASE_A },  // Step 4
+  { PHASE_C, PHASE_A, PHASE_B },  // Step 5
+  { PHASE_A, PHASE_C, PHASE_B }   // Step 6
 };
 
 static PhaseConfig_t *phase_config;
@@ -30,7 +30,9 @@ static void prv_zero_crossing(int zeroCrossings[]) {
   gpio_get_state(&phase_config->phase_C.zcross);
 }
 
-static int prv_get_commutation_step(int zeroCrossings[]) { return 0; }
+static int prv_get_commutation_step(int zeroCrossings[]) {
+  return 0;
+}
 
 // Placeholder for commutating motor phases
 static void prv_commutate_motor(int commutationStep) {

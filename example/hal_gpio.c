@@ -8,7 +8,9 @@ typedef enum { GPIO_PORT_A = 0, GPIO_PORT_B, GPIO_PORT_C } GpioPort;
 //     .gpio_address = {.port = GPIO_PORT_A, .pin = 15}, .gpio_state = 1000000, .gpio_mode =
 //     GPIO_OUTPUT_PUSH_PULL};
 
-GpioState gpio_get_state(Gpio *gpio) { return gpio->gpio_state; }
+GpioState gpio_get_state(Gpio *gpio) {
+  return gpio->gpio_state;
+}
 
 void gpio_set_state(Gpio *gpio, GpioState state) {
   if (state >= NUM_GPIO_STATES) {

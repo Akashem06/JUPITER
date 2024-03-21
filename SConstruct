@@ -16,7 +16,8 @@ cflags = [
     '-Wpointer-arith',
     '-Isrc',
     '-Iinc',
-    '-Ihal'
+    '-Ihal',
+    '-Itest/inc'
 ]
 
 env = Environment(
