@@ -30,9 +30,7 @@ static void prv_zero_crossing(int zeroCrossings[]) {
   gpio_get_state(&phase_config->phase_C.zcross);
 }
 
-static int prv_get_commutation_step(int zeroCrossings[]) {
-  return 0;
-}
+static int prv_get_commutation_step(int zeroCrossings[]) { return 0; }
 
 // Placeholder for commutating motor phases
 static void prv_commutate_motor(int commutationStep) {

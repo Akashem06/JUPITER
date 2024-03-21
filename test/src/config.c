@@ -10,6 +10,9 @@ static const Gpio phaseA_zcross = { .gpio_address = { .port = GPIO_PORT_A, .pin 
                                     .gpio_mode = GPIO_INPUT_PULL_DOWN,
                                     .gpio_state = GPIO_STATE_LOW };
 
+static const Timer phaseA_pwm
+    = { .current_time = 0, .pwm_duty_cycle = 0, .prescaler = 0, .period = 60 };
+
 static const Gpio phaseB_in = { .gpio_address = { .port = GPIO_PORT_A, .pin = 9 },
                                 .gpio_mode = GPIO_OUTPUT_PUSH_PULL,
                                 .gpio_state = GPIO_STATE_LOW };
@@ -17,6 +20,9 @@ static const Gpio phaseB_in = { .gpio_address = { .port = GPIO_PORT_A, .pin = 9 
 static const Gpio phaseB_zcross = { .gpio_address = { .port = GPIO_PORT_A, .pin = 1 },
                                     .gpio_mode = GPIO_INPUT_PULL_DOWN,
                                     .gpio_state = GPIO_STATE_LOW };
+
+static const Timer phaseB_pwm
+    = { .current_time = 0, .pwm_duty_cycle = 0, .prescaler = 0, .period = 60 };
 
 static const Gpio phaseC_in = { .gpio_address = { .port = GPIO_PORT_A, .pin = 10 },
                                 .gpio_mode = GPIO_OUTPUT_PUSH_PULL,
@@ -26,13 +32,22 @@ static const Gpio phaseC_zcross = { .gpio_address = { .port = GPIO_PORT_A, .pin 
                                     .gpio_mode = GPIO_INPUT_PULL_DOWN,
                                     .gpio_state = GPIO_STATE_LOW };
 
+static const Timer phaseC_pwm
+    = { .current_time = 0, .pwm_duty_cycle = 0, .prescaler = 1, .period = 60 };
+
 void jupiter_test_setup(PhaseConfig_t *phase_config) {
-    phase_config->speed = 30;
-    phase_config->reversed = false;
-    phase_config->phase_A.in = phaseA_in;
-    phase_config->phase_A.zcross = phaseA_zcross;
-    phase_config->phase_B.in = phaseB_in;
-    phase_config->phase_B.zcross = phaseB_zcross;
-    phase_config->phase_C.in = phaseC_in;
-    phase_config->phase_C.zcross = phaseC_zcross;
+  phase_config->speed = 30;
+  phase_config->reversed = false;
+
+  phase_config->phase_A.in = phaseA_in;
+  phase_config->phase_A.zcross = phaseA_zcross;
+  phase_config->phase_A.pwm = phaseA_pwm;
+
+  phase_config->phase_B.in = phaseB_in;
+  phase_config->phase_B.zcross = phaseB_zcross;
+  phase_config->phase_B.pwm = phaseB_pwm;
+
+  phase_config->phase_C.in = phaseC_in;
+  phase_config->phase_C.zcross = phaseC_zcross;
+  phase_config->phase_C.pwm = phaseC_pwm;
 }

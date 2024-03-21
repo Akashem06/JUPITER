@@ -2,9 +2,7 @@
 
 #include "hal_tim.h"
 
-uint32_t get_time_s(Timer *timer) {
-  return timer->current_time;
-}
+uint32_t get_time_s(Timer *timer) { return timer->current_time; }
 
 void set_duty_cycle(Timer *timer, uint8_t duty_cycle) {
   if (duty_cycle > 100) {
