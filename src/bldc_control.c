@@ -25,26 +25,92 @@ JupiterStatus bldc_6step_init(uint16_t speed, PhaseConfig_t *user_config) {
 
 // Zero crossing detection
 static void prv_zero_crossing(int zeroCrossings[]) {
-  gpio_get_state(&phase_config->phase_A.zcross);
-  gpio_get_state(&phase_config->phase_B.zcross);
-  gpio_get_state(&phase_config->phase_C.zcross);
+  zeroCrossings[0] = gpio_get_state(&phase_config->phase_A.zcross);
+  zeroCrossings[1] = gpio_get_state(&phase_config->phase_B.zcross);
+  zeroCrossings[2] = gpio_get_state(&phase_config->phase_C.zcross);
 }
 
-static int prv_get_commutation_step(int zeroCrossings[]) { return 0; }
+static int prv_get_commutation_step(int zeroCrossings[]) {
+  if (zeroCrossings[0] && !zeroCrossings[1]) {
+        return 0; // A+ (HIGH) B- (LOW)
+    } else if (zeroCrossings[1] && !zeroCrossings[2]) {
+        return 1; // A+ (HIGH) C- (LOW)
+    } else if (zeroCrossings[2] && !zeroCrossings[3]) {
+        return 2; // B+ (HIGH) C- (LOW)
+    } else if (zeroCrossings[3] && !zeroCrossings[4]) {
+        return 3; // B+ (HIGH) A- (LOW)
+    } else if (zeroCrossings[4] && !zeroCrossings[5]) {
+        return 4; // C+ (HIGH) A- (LOW)
+    } else if (zeroCrossings[5] && !zeroCrossings[0]) {
+        return 5; // C+ (HIGH) B- (LOW)
+    } else {
+        return -1; // Invalid or unknown state
+    }
+}
 
 // Placeholder for commutating motor phases
 static void prv_commutate_motor(int commutationStep) {
-  // Commutate motor phases based on the determined step
-  // Example:
-  // switch (commutationStep) {
-  //     case 0:
-  //         // Commutate phase A high, phase B low, phase C off
-  //         HAL_GPIO_WritePin(PHASE_A_GPIO_Port, PHASE_A_Pin, GPIO_PIN_SET);
-  //         HAL_GPIO_WritePin(PHASE_B_GPIO_Port, PHASE_B_Pin, GPIO_PIN_RESET);
-  //         HAL_GPIO_WritePin(PHASE_C_GPIO_Port, PHASE_C_Pin, GPIO_PIN_RESET);
-  //         break;
-  //     // Other commutation steps...
-  // }
+  switch (commutationStep) {
+      case 0:
+        // A+ (HIGH) B- (LOW)
+        gpio_set_state(&phase_config->phase_C.sd, GPIO_STATE_LOW);
+        gpio_set_state(&phase_config->phase_A.sd, GPIO_STATE_HIGH);
+
+        gpio_set_state(&phase_config->phase_A.in, GPIO_STATE_HIGH);
+        gpio_set_state(&phase_config->phase_B.in, GPIO_STATE_LOW);
+
+        break;
+
+      case 1:
+        // A+ (HIGH) C- (LOW)
+        gpio_set_state(&phase_config->phase_B.sd, GPIO_STATE_LOW);
+        gpio_set_state(&phase_config->phase_C.sd, GPIO_STATE_HIGH);
+
+        gpio_set_state(&phase_config->phase_A.in, GPIO_STATE_HIGH);
+        gpio_set_state(&phase_config->phase_C.in, GPIO_STATE_LOW);
+
+        break;
+
+      case 2:
+        // B+ (HIGH) C- (LOW)
+        gpio_set_state(&phase_config->phase_A.sd, GPIO_STATE_LOW);
+        gpio_set_state(&phase_config->phase_B.sd, GPIO_STATE_HIGH);
+        
+        gpio_set_state(&phase_config->phase_B.in, GPIO_STATE_HIGH);
+        gpio_set_state(&phase_config->phase_C.sd, GPIO_STATE_LOW);
+        break;
+
+      case 3:
+        // B+ (HIGH) A- (LOW)
+        gpio_set_state(&phase_config->phase_C.sd, GPIO_STATE_LOW);
+        gpio_set_state(&phase_config->phase_A.sd, GPIO_STATE_HIGH);
+
+        gpio_set_state(&phase_config->phase_B.sd, GPIO_STATE_LOW);
+        gpio_set_state(&phase_config->phase_A.in, GPIO_STATE_HIGH);
+        break;
+
+      case 4:
+        // C+ (HIGH) A- (LOW)
+        gpio_set_state(&phase_config->phase_B.sd, GPIO_STATE_LOW);
+        gpio_set_state(&phase_config->phase_C.sd, GPIO_STATE_HIGH);
+
+        gpio_set_state(&phase_config->phase_C.in, GPIO_STATE_HIGH);
+        gpio_set_state(&phase_config->phase_A.in, GPIO_STATE_LOW);
+        break;
+        
+      case 5:
+        // C+ (HIGH) B- (LOW)
+        gpio_set_state(&phase_config->phase_A.sd, GPIO_STATE_LOW);
+        gpio_set_state(&phase_config->phase_B.sd, GPIO_STATE_HIGH);
+
+        gpio_set_state(&phase_config->phase_C.in, GPIO_STATE_HIGH);
+        gpio_set_state(&phase_config->phase_B.in, GPIO_STATE_LOW);
+        break;
+
+      default:
+        // ERROR
+        break;
+  }
 }
 
 JupiterStatus set_bldc_6step_speed(uint16_t updated_speed) {
@@ -63,14 +129,11 @@ void delay(int milliseconds) {
 }
 
 JupiterStatus run_bldc_6step() {
-  // Detect zero crossings
   int zeroCrossings[3];
   prv_zero_crossing(zeroCrossings);
 
-  // Determine commutation step
   int commutationStep = prv_get_commutation_step(zeroCrossings);
 
-  // Commutate motor phases
   prv_commutate_motor(commutationStep);
 
   // Implement safety features (e.g., overcurrent protection)
