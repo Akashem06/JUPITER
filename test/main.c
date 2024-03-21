@@ -7,5 +7,9 @@ PhaseConfig_t jupiter_test_config;
 
 int main(void) {
   jupiter_test_setup(&jupiter_test_config);
+  
+  bldc_6step_init(30, &jupiter_test_config);
+
+  run_bldc_6step();
   return 0;
 }

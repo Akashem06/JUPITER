@@ -135,9 +135,7 @@ JupiterStatus run_bldc_6step() {
   int commutationStep = prv_get_commutation_step(zeroCrossings);
 
   prv_commutate_motor(commutationStep);
-
-  // Implement safety features (e.g., overcurrent protection)
-
+  
   // Delay to control commutation frequency
   // delay(COMMUTATION_PERIOD);  // Adjust with the desired commutation period
   return JUPITER_OK;
