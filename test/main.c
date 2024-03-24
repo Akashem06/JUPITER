@@ -10,6 +10,9 @@ int main(void) {
   
   bldc_6step_init(30, &jupiter_test_config);
 
-  run_bldc_6step();
+  while (true) {
+    run_bldc_6step();
+  }
+  
   return 0;
 }
