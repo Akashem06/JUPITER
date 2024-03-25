@@ -17,7 +17,9 @@ cflags = [
     '-Isrc',
     '-Iinc',
     '-Ihal',
-    '-Itest/inc'
+    '-Itest/inc',
+    '-IUnity/src',
+    '-DTest'
 ]
 
 env = Environment(
@@ -36,6 +38,9 @@ COMMAND = COMMAND_LINE_TARGETS[0] if COMMAND_LINE_TARGETS else ''
 
 if COMMAND == 'build':
     SConscript('scons/build.scons', exports={'env': env})
+
+elif COMMAND == 'test':
+    SConscript('scons/test.scons', exports={'env': env})
 
 elif COMMAND == 'clean':
     AlwaysBuild(Command('#/clean', [], 'rm -rf build/*'))

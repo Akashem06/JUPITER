@@ -1,13 +1,44 @@
 import glob
+import os
+import subprocess
 
 Import('env')
 
 ROOT = Dir('#')
+UNITY_FOLDER = f'{ROOT}/Unity'
+
 CFILES = glob.glob(f'{ROOT}/**/*.c', recursive=True)
+TESTFILES = glob.glob(f'{ROOT}/test/*.c', recursive=True)
 HFILES = glob.glob(f'{ROOT}/**/*.h', recursive=True)
 
-# Generate object files from source files
-objs = [env.Object(target=f'{ROOT}/build/objs/{File(file).name[:-2]}.o', source=file) for file in CFILES]
+objs = []
+
+for file in CFILES:
+  if 'Unity' not in file or os.path.basename(file) == 'unity.c':
+    obj = env.Object(target=f'{ROOT}/build/objs/{File(file).name[:-2]}.o', source=file)
+    objs.append(obj)
 
 # Generate the binary in the build/bin directory
 binary = env.Program(target=f'{ROOT}/build/bin/BLDC_control', source=objs)
+
+RESULT_FILES = [file.replace('.c', '.txt') for file in TESTFILES]
+
+print (RESULT_FILES)
+
+print('\n-----------------------IGNORES:-----------------------')
+for result_file in RESULT_FILES:
+  with open(result_file) as file:
+    content = file.read()
+    for line in content:
+      if 'IGNORE' in line:
+          print(line.strip())
+
+print('-----------------------FAILURES:-----------------------')
+for result_file in RESULT_FILES:
+  with open(result_file) as file:
+    content = file.read()
+    for line in content:
+      if 'FAIL' in line:
+          print(line.strip())
+
+print('\nDONE\n')

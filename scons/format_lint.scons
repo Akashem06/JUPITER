@@ -20,7 +20,7 @@ def run_lint(target, source, env):
     BASE_ARGS = '--enable=all --template=gcc --error-exitcode=1 --cppcheck-build-dir=cppcheckbuild -q --inline-suppr'
 
     HEADER_FILES = glob.glob(f'{ROOT}/**/*.h', recursive = True)
-    HEADER_FILES = ' '.join(HEADER_FILES)
+    HEADER_FILES = ' '.join([hfile for hfile in HEADER_FILES if 'Unity' not in hfile])
     
     print(f'Running Cppcheck\n')
     subprocess.run(f'cppcheck {FILES_STR} {SUPPRESSIONS} {BASE_ARGS} {HEADER_FILES}', shell=True)
@@ -28,8 +28,7 @@ def run_lint(target, source, env):
 
 ROOT = Dir('#')
 FILES = glob.glob(f'{ROOT}/**/*.[ch]', recursive=True)
-FILES_STR = ' '.join(FILES)
-
+FILES_STR = ' '.join([file for file in FILES if 'Unity' not in file])
 
 Command('#/lint', [], run_lint)
 Command('#/format', [], run_format)

@@ -30,86 +30,86 @@ static void prv_zero_crossing(int zeroCrossings[]) {
   zeroCrossings[2] = gpio_get_state(&phase_config->phase_C.zcross);
 }
 
-static int prv_get_commutation_step(int zeroCrossings[]) {
+static int prv_get_commutation_step(const int zeroCrossings[]) {
   if (zeroCrossings[0] && !zeroCrossings[1]) {
-        return 0; // A+ (HIGH) B- (LOW)
-    } else if (zeroCrossings[1] && !zeroCrossings[2]) {
-        return 1; // A+ (HIGH) C- (LOW)
-    } else if (zeroCrossings[2] && !zeroCrossings[3]) {
-        return 2; // B+ (HIGH) C- (LOW)
-    } else if (zeroCrossings[3] && !zeroCrossings[4]) {
-        return 3; // B+ (HIGH) A- (LOW)
-    } else if (zeroCrossings[4] && !zeroCrossings[5]) {
-        return 4; // C+ (HIGH) A- (LOW)
-    } else if (zeroCrossings[5] && !zeroCrossings[0]) {
-        return 5; // C+ (HIGH) B- (LOW)
-    } else {
-        return -1; // Invalid or unknown state
-    }
+    return 0;  // A+ (HIGH) B- (LOW)
+  } else if (zeroCrossings[1] && !zeroCrossings[2]) {
+    return 1;  // A+ (HIGH) C- (LOW)
+  } else if (zeroCrossings[2] && !zeroCrossings[3]) {
+    return 2;  // B+ (HIGH) C- (LOW)
+  } else if (zeroCrossings[3] && !zeroCrossings[4]) {
+    return 3;  // B+ (HIGH) A- (LOW)
+  } else if (zeroCrossings[4] && !zeroCrossings[5]) {
+    return 4;  // C+ (HIGH) A- (LOW)
+  } else if (zeroCrossings[5] && !zeroCrossings[0]) {
+    return 5;  // C+ (HIGH) B- (LOW)
+  } else {
+    return -1;  // Invalid or unknown state
+  }
 }
 
 // Placeholder for commutating motor phases
 static void prv_commutate_motor(int commutationStep) {
   switch (commutationStep) {
-      case 0:
-        // A+ (HIGH) B- (LOW)
-        gpio_set_state(&phase_config->phase_C.sd, GPIO_STATE_LOW);
-        gpio_set_state(&phase_config->phase_A.sd, GPIO_STATE_HIGH);
+    case 0:
+      // A+ (HIGH) B- (LOW)
+      gpio_set_state(&phase_config->phase_C.sd, GPIO_STATE_LOW);
+      gpio_set_state(&phase_config->phase_A.sd, GPIO_STATE_HIGH);
 
-        gpio_set_state(&phase_config->phase_A.in, GPIO_STATE_HIGH);
-        gpio_set_state(&phase_config->phase_B.in, GPIO_STATE_LOW);
+      gpio_set_state(&phase_config->phase_A.in, GPIO_STATE_HIGH);
+      gpio_set_state(&phase_config->phase_B.in, GPIO_STATE_LOW);
 
-        break;
+      break;
 
-      case 1:
-        // A+ (HIGH) C- (LOW)
-        gpio_set_state(&phase_config->phase_B.sd, GPIO_STATE_LOW);
-        gpio_set_state(&phase_config->phase_C.sd, GPIO_STATE_HIGH);
+    case 1:
+      // A+ (HIGH) C- (LOW)
+      gpio_set_state(&phase_config->phase_B.sd, GPIO_STATE_LOW);
+      gpio_set_state(&phase_config->phase_C.sd, GPIO_STATE_HIGH);
 
-        gpio_set_state(&phase_config->phase_A.in, GPIO_STATE_HIGH);
-        gpio_set_state(&phase_config->phase_C.in, GPIO_STATE_LOW);
+      gpio_set_state(&phase_config->phase_A.in, GPIO_STATE_HIGH);
+      gpio_set_state(&phase_config->phase_C.in, GPIO_STATE_LOW);
 
-        break;
+      break;
 
-      case 2:
-        // B+ (HIGH) C- (LOW)
-        gpio_set_state(&phase_config->phase_A.sd, GPIO_STATE_LOW);
-        gpio_set_state(&phase_config->phase_B.sd, GPIO_STATE_HIGH);
-        
-        gpio_set_state(&phase_config->phase_B.in, GPIO_STATE_HIGH);
-        gpio_set_state(&phase_config->phase_C.sd, GPIO_STATE_LOW);
-        break;
+    case 2:
+      // B+ (HIGH) C- (LOW)
+      gpio_set_state(&phase_config->phase_A.sd, GPIO_STATE_LOW);
+      gpio_set_state(&phase_config->phase_B.sd, GPIO_STATE_HIGH);
 
-      case 3:
-        // B+ (HIGH) A- (LOW)
-        gpio_set_state(&phase_config->phase_C.sd, GPIO_STATE_LOW);
-        gpio_set_state(&phase_config->phase_A.sd, GPIO_STATE_HIGH);
+      gpio_set_state(&phase_config->phase_B.in, GPIO_STATE_HIGH);
+      gpio_set_state(&phase_config->phase_C.sd, GPIO_STATE_LOW);
+      break;
 
-        gpio_set_state(&phase_config->phase_B.sd, GPIO_STATE_LOW);
-        gpio_set_state(&phase_config->phase_A.in, GPIO_STATE_HIGH);
-        break;
+    case 3:
+      // B+ (HIGH) A- (LOW)
+      gpio_set_state(&phase_config->phase_C.sd, GPIO_STATE_LOW);
+      gpio_set_state(&phase_config->phase_A.sd, GPIO_STATE_HIGH);
 
-      case 4:
-        // C+ (HIGH) A- (LOW)
-        gpio_set_state(&phase_config->phase_B.sd, GPIO_STATE_LOW);
-        gpio_set_state(&phase_config->phase_C.sd, GPIO_STATE_HIGH);
+      gpio_set_state(&phase_config->phase_B.sd, GPIO_STATE_LOW);
+      gpio_set_state(&phase_config->phase_A.in, GPIO_STATE_HIGH);
+      break;
 
-        gpio_set_state(&phase_config->phase_C.in, GPIO_STATE_HIGH);
-        gpio_set_state(&phase_config->phase_A.in, GPIO_STATE_LOW);
-        break;
-        
-      case 5:
-        // C+ (HIGH) B- (LOW)
-        gpio_set_state(&phase_config->phase_A.sd, GPIO_STATE_LOW);
-        gpio_set_state(&phase_config->phase_B.sd, GPIO_STATE_HIGH);
+    case 4:
+      // C+ (HIGH) A- (LOW)
+      gpio_set_state(&phase_config->phase_B.sd, GPIO_STATE_LOW);
+      gpio_set_state(&phase_config->phase_C.sd, GPIO_STATE_HIGH);
 
-        gpio_set_state(&phase_config->phase_C.in, GPIO_STATE_HIGH);
-        gpio_set_state(&phase_config->phase_B.in, GPIO_STATE_LOW);
-        break;
+      gpio_set_state(&phase_config->phase_C.in, GPIO_STATE_HIGH);
+      gpio_set_state(&phase_config->phase_A.in, GPIO_STATE_LOW);
+      break;
 
-      default:
-        // ERROR
-        break;
+    case 5:
+      // C+ (HIGH) B- (LOW)
+      gpio_set_state(&phase_config->phase_A.sd, GPIO_STATE_LOW);
+      gpio_set_state(&phase_config->phase_B.sd, GPIO_STATE_HIGH);
+
+      gpio_set_state(&phase_config->phase_C.in, GPIO_STATE_HIGH);
+      gpio_set_state(&phase_config->phase_B.in, GPIO_STATE_LOW);
+      break;
+
+    default:
+      // ERROR
+      break;
   }
 }
 
@@ -135,7 +135,7 @@ JupiterStatus run_bldc_6step() {
   int commutationStep = prv_get_commutation_step(zeroCrossings);
 
   prv_commutate_motor(commutationStep);
-  
+
   // Delay to control commutation frequency
   // delay(COMMUTATION_PERIOD);  // Adjust with the desired commutation period
   return JUPITER_OK;
