@@ -1,6 +1,5 @@
 import glob
 import os
-import subprocess
 
 Import('env')
 
@@ -8,7 +7,6 @@ ROOT = Dir('#')
 UNITY_FOLDER = f'{ROOT}/Unity'
 
 CFILES = glob.glob(f'{ROOT}/**/*.c', recursive=True)
-TESTFILES = glob.glob(f'{ROOT}/test/*.c', recursive=True)
 HFILES = glob.glob(f'{ROOT}/**/*.h', recursive=True)
 
 objs = []
@@ -21,24 +19,5 @@ for file in CFILES:
 # Generate the binary in the build/bin directory
 binary = env.Program(target=f'{ROOT}/build/bin/BLDC_control', source=objs)
 
-RESULT_FILES = [file.replace('.c', '.txt') for file in TESTFILES]
-
-print (RESULT_FILES)
-
-# print('\n-----------------------IGNORES:-----------------------')
-# for result_file in RESULT_FILES:
-#   with open(result_file) as file:
-#     content = file.read()
-#     for line in content:
-#       if 'IGNORE' in line:
-#           print(line.strip())
-# 
-# print('-----------------------FAILURES:-----------------------')
-# for result_file in RESULT_FILES:
-#   with open(result_file) as file:
-#     content = file.read()
-#     for line in content:
-#       if 'FAIL' in line:
-#           print(line.strip())
-# 
-# print('\nDONE\n')
+if not os.path.exists(f'{ROOT}/build/unity_logs'):
+  os.makedirs(f'{ROOT}/build/unity_logs')

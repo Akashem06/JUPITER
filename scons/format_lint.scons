@@ -25,7 +25,6 @@ def run_lint(target, source, env):
     print(f'Running Cppcheck\n')
     subprocess.run(f'cppcheck {FILES_STR} {SUPPRESSIONS} {BASE_ARGS} {HEADER_FILES}', shell=True)
 
-
 ROOT = Dir('#')
 FILES = glob.glob(f'{ROOT}/**/*.[ch]', recursive=True)
 FILES_STR = ' '.join([file for file in FILES if 'Unity' not in file])
