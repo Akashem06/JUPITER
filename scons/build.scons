@@ -17,7 +17,7 @@ for file in CFILES:
     objs.append(obj)
 
 # Generate the binary in the build/bin directory
-binary = env.Program(target=f'{ROOT}/build/bin/BLDC_control', source=objs)
+binary = env.Program(target=f'{ROOT}/build/bin/bldc_control', source=objs)
 
 if not os.path.exists(f'{ROOT}/build/unity_logs'):
   os.makedirs(f'{ROOT}/build/unity_logs')
