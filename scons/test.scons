@@ -26,7 +26,7 @@ for test_file, result_file in RESULT_FILES:
 
     with open(result_file, 'r') as output_file:
       content = output_file.read()
-      print(f'\n-----------------------{os.path.basename(test_file)} LOGS:-----------------------\n')
+      print(f'\n-----------------------{os.path.basename(test_file).upper()} LOGS:-----------------------\n')
       print(content)
 
   else:

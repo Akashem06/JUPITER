@@ -15,7 +15,7 @@ typedef enum {
   NUM_GPIO_MODES,
 } GpioMode;
 
-typedef enum { GPIO_STATE_HIGH = 0, GPIO_STATE_LOW, NUM_GPIO_STATES } GpioState;
+typedef enum { GPIO_STATE_LOW = 0, GPIO_STATE_HIGH, NUM_GPIO_STATES } GpioState;
 
 typedef struct {
   uint8_t port;
