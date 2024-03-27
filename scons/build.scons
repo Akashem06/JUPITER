@@ -25,20 +25,20 @@ RESULT_FILES = [file.replace('.c', '.txt') for file in TESTFILES]
 
 print (RESULT_FILES)
 
-print('\n-----------------------IGNORES:-----------------------')
-for result_file in RESULT_FILES:
-  with open(result_file) as file:
-    content = file.read()
-    for line in content:
-      if 'IGNORE' in line:
-          print(line.strip())
-
-print('-----------------------FAILURES:-----------------------')
-for result_file in RESULT_FILES:
-  with open(result_file) as file:
-    content = file.read()
-    for line in content:
-      if 'FAIL' in line:
-          print(line.strip())
-
-print('\nDONE\n')
+# print('\n-----------------------IGNORES:-----------------------')
+# for result_file in RESULT_FILES:
+#   with open(result_file) as file:
+#     content = file.read()
+#     for line in content:
+#       if 'IGNORE' in line:
+#           print(line.strip())
+# 
+# print('-----------------------FAILURES:-----------------------')
+# for result_file in RESULT_FILES:
+#   with open(result_file) as file:
+#     content = file.read()
+#     for line in content:
+#       if 'FAIL' in line:
+#           print(line.strip())
+# 
+# print('\nDONE\n')
