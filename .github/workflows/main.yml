@@ -26,9 +26,19 @@ jobs:
           git clone https://github.com/ThrowTheSwitch/Unity.git
           git pull
 
-      - name: Running build generation
+      - name: Running build generation and Unit tests
         run: |
           scons build
+          scons test
+          for log_file in build/unity_logs/*.txt; do
+            if grep -q 'FAIL' "$log_file"; then
+              echo "::error::Tests failed in $log_file. Check unity logs for details."
+              exit 1
+            fi
+            if grep -q 'IGNORE' "$log_file"; then
+              echo "::error::Tests ignored in $log_file. Check unity logs for details."
+            fi
+          done
 
       - name: Running formatting check
         run: |
@@ -41,18 +51,3 @@ jobs:
 
       - name: Running static analysis
         run: scons lint
-
-      - name: Running unit tests
-        run: scons test
-      
-      - name: Check test results
-        run: |
-          for log_file in build/unity_logs/*.txt; do
-            if grep -q 'FAIL' "$log_file"; then
-              echo "::error::Tests failed in $log_file. Check unity logs for details."
-              exit 1
-            fi
-            if grep -q 'IGNORE' "$log_file"; then
-              echo "::error::Tests ignored in $log_file. Check unity logs for details."
-            fi
-          done
