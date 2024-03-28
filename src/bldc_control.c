@@ -41,11 +41,11 @@ uint8_t prv_get_commutation_step(const uint8_t zeroCrossings[]) {
   } else if (!zeroCrossings[0] && zeroCrossings[1] && zeroCrossings[2]) {
     return 3;  // A- (LOW) B+ (HIGH) C+ (HIGH)
   } else if (!zeroCrossings[0] && !zeroCrossings[1] && zeroCrossings[2]) {
-    return 4;  // A- (LOW) B- (HIGH) C+ (HIGH)
+    return 4;  // A- (LOW) B- (LOW) C+ (HIGH)
   } else if (zeroCrossings[0] && !zeroCrossings[1] && zeroCrossings[2]) {
     return 5;  // A+ (HIGH) B- (LOW) C+ (HIGH)
   } else {
-    return -1;  // Invalid or unknown state
+    return 0xff;  // Invalid or unknown state
   }
 }
 
