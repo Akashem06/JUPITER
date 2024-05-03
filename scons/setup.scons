@@ -1,0 +1,10 @@
+import subprocess
+
+def run_setup(target, source, env):
+    ## Change directory to libs/googletest and create the build directory
+    subprocess.run(['mkdir', '-p', 'libs/googletest/build'], check=True)
+    # Run cmake and make from the libs/googletest/build directory
+    subprocess.run(['cmake', '..'], cwd='libs/googletest/build', check=True)
+    subprocess.run(['make'], cwd='libs/googletest/build', check=True)
+
+Command('#/setup', [], run_setup)

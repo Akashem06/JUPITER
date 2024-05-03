@@ -2,12 +2,13 @@ import subprocess
 import glob
 
 Import('env')
+ROOT = Dir('#')
 
 def run_format(target, source, env):
     clang_format_cmd = 'clang-format -i'
-    if len(FILES) > 0:
-        print('Formatting .[ch] files\n')
-        result = subprocess.run(f'{clang_format_cmd} {FILES_STR}', shell=True)
+    if len(CFILES) > 0:
+        print('Formatting .[cpp/hpp] .[ch] files\n')
+        result = subprocess.run(f'{clang_format_cmd} {CFILES_STR}', shell=True)
 
         if result.returncode == 0:
             print("Formatting was successful")
@@ -18,16 +19,19 @@ def run_format(target, source, env):
 def run_lint(target, source, env): 
     SUPPRESSIONS='--suppress=missingIncludeSystem --suppress=unusedFunction --suppress=missingInclude --suppress=unmatchedSuppression'
     BASE_ARGS = '--enable=all --template=gcc --error-exitcode=1 --cppcheck-build-dir=cppcheckbuild -q --inline-suppr'
-
-    HEADER_FILES = glob.glob(f'{ROOT}/**/*.h', recursive = True)
-    HEADER_FILES = ' '.join([hfile for hfile in HEADER_FILES if 'Unity' not in hfile])
     
     print(f'Running Cppcheck\n')
-    subprocess.run(f'cppcheck {FILES_STR} {SUPPRESSIONS} {BASE_ARGS} {HEADER_FILES}', shell=True)
+    subprocess.run(f'cppcheck {CFILES_STR} {SUPPRESSIONS} {BASE_ARGS} {HEADER_FILES}', shell=True)
 
-ROOT = Dir('#')
-FILES = glob.glob(f'{ROOT}/**/*.[ch]', recursive=True)
-FILES_STR = ' '.join([file for file in FILES if 'Unity' not in file])
+CFILES = glob.glob(f'{ROOT}/**/*.[ch]', recursive=True)
+CPP_FILES = glob.glob(f'{ROOT}/**/*.cpp', recursive=True)
+CFILES.extend(CPP_FILES)
+CFILES_STR = ' '.join([file for file in CFILES if 'libs/googletest' not in file])
+
+HEADER_FILES = glob.glob(f'{ROOT}/**/*.h', recursive = True)
+HPP_FILES = glob.glob(f'{ROOT}/**/*.hpp', recursive = True)
+HEADER_FILES.extend(HPP_FILES)
+HEADER_FILES = ' '.join([hfile for hfile in HEADER_FILES if 'libs/googletest' not in hfile])
 
 Command('#/lint', [], run_lint)
 Command('#/format', [], run_format)

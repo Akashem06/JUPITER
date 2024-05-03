@@ -1,7 +1,7 @@
 name: CI
 
 on:
-  # Will run on all PR's and pushes to master
+  # Will run on all PR's and pushes to main
   push:
     branches: [main]
   pull_request:
@@ -11,29 +11,39 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code and submodules
+        uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
 
       - name: Set up Python
-        uses: actions/setup-python@v2       
+        uses: actions/setup-python@v2
         with:
           python-version: 3.10.12
 
       - name: Install SCons
         run: python -m pip install scons
       
-      - name: Install Unity
+      - name: Generate googletest library
         run: |
-          git clone https://github.com/ThrowTheSwitch/Unity.git
-          git pull
+          cd libs/googletest
+          mkdir -p build
+          cd build
+          cmake ..
+          make
 
       - name: Running build generation
         run: |
           scons build
+      
+      - name: Running unit tests
+        run: |
+          scons test
 
       - name: Running formatting check
         run: |
           scons format
-          if [[ $(git diff --name-only) ]] ; then 
+          if [[ $(git diff --name-only) ]] ; then
               echo -e "\n unformatted files:";
               git diff --name-only;
               exit 1;
@@ -41,18 +51,3 @@ jobs:
 
       - name: Running static analysis
         run: scons lint
-
-      - name: Running unit tests
-        run: scons test
-      
-      - name: Check test results
-        run: |
-          for log_file in build/unity_logs/*.txt; do
-            if grep -q 'FAIL' "$log_file"; then
-              echo "::error::Tests failed in $log_file. Check unity logs for details."
-              exit 1
-            fi
-            if grep -q 'IGNORE' "$log_file"; then
-              echo "::error::Tests ignored in $log_file. Check unity logs for details."
-            fi
-          done

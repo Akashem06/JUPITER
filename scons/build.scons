@@ -1,23 +1,33 @@
 import glob
 import os
+import subprocess
 
 Import('env')
 
 ROOT = Dir('#')
-UNITY_FOLDER = f'{ROOT}/Unity'
+
+c_env = env.Clone(CCFLAGS=['-std=c99'])
+cpp_env = env.Clone(CXXFLAGS=['-std=c++14'])
 
 CFILES = glob.glob(f'{ROOT}/**/*.c', recursive=True)
+CPPFILES = glob.glob(f'{ROOT}/**/*.cpp', recursive=True)
 HFILES = glob.glob(f'{ROOT}/**/*.h', recursive=True)
+HPPFILES = glob.glob(f'{ROOT}/**/*.hpp', recursive=True)
 
 objs = []
 
 for file in CFILES:
-  if 'Unity' not in file or os.path.basename(file) == 'unity.c':
-    obj = env.Object(target=f'{ROOT}/build/objs/{File(file).name[:-2]}.o', source=file)
-    objs.append(obj)
+    if 'libs/googletest' not in file:
+        print(file)
+        obj = c_env.Object(target=f'{ROOT}/build/objs/{File(file).name[:-2]}.o', source=file)
+        objs.append(obj)
+
+for file in CPPFILES:
+    if 'libs/googletest' not in file:
+        print(file)
+        obj = cpp_env.Object(target=f'{ROOT}/build/objs/{File(file).name[:-4]}.o', source=file)
+        objs.append(obj)
+
 
 # Generate the binary in the build/bin directory
-binary = env.Program(target=f'{ROOT}/build/bin/bldc_control', source=objs)
-
-if not os.path.exists(f'{ROOT}/build/unity_logs'):
-  os.makedirs(f'{ROOT}/build/unity_logs')
+binary = env.Program(target=f'{ROOT}/build/bin/jupiter', source=objs)

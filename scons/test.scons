@@ -1,34 +1,11 @@
 import subprocess
-import glob
 import os
 
 Import('env')
-
 ROOT = Dir('#')
-TESTFILES = glob.glob(f'{ROOT}/test/*.c', recursive=True)
 
-RESULT_FILES = [
-    (
-        os.path.basename(file.replace('.c', '').replace('test_', '')),
-        os.path.basename(file.replace('.c', '.txt').replace('test_', ''))
-    ) 
-    for file in TESTFILES
-]
-
-for test_file, result_file in RESULT_FILES:
-  test_file = os.path.join(f'{ROOT}/build/bin/', test_file)
-  result_file = os.path.join(f'{ROOT}/build/unity_logs/', result_file)
-
-  if (os.path.exists(f'{ROOT}/build/unity_logs/')):
-
-    with open(result_file, 'w') as output_file:
-        subprocess.run(test_file, stdout=output_file, stderr=subprocess.STDOUT, shell=True)
-
-    with open(result_file, 'r') as output_file:
-      content = output_file.read()
-      print(f'\n-----------------------{os.path.basename(test_file).upper()} LOGS:-----------------------\n')
-      print(content)
-
-  else:
-    print('\nNo builds found :(\n')
+if os.path.exists(f'{ROOT}/build/bin/jupiter'):
+    subprocess.run([f'{ROOT}/build/bin/jupiter'], check=True)
+else:
+    raise RuntimeError("Jupiter is not built")
 
