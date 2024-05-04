@@ -1,6 +1,6 @@
 BasedOnStyle:  Google
-IndentWidth: 2
-ColumnLimit: 100 
+IndentWidth: 4
+ColumnLimit: 150
 BreakBeforeBinaryOperators: All
 AlignAfterOpenBracket: Align
 Cpp11BracedListStyle: false
