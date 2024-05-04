@@ -8,7 +8,7 @@ using namespace ::testing;
 TEST(PIDTest, proportional_gain_test) {
     hal::MOCK_JupiterClock mock_clock;
     PIDController<float> pid(1, 0, 0, -10, 10, 0, mock_clock);
-    
+
     EXPECT_EQ(pid.get_kp(), 1.0);
 
     // Expect a call to get_time_us() to return 500
@@ -17,7 +17,7 @@ TEST(PIDTest, proportional_gain_test) {
 
     // Expect a call to get_time_us() to return 123
     EXPECT_CALL(mock_clock, get_time_us()).WillOnce(Return(123));
-    EXPECT_EQ(pid.calculate(20, 0), 10); // Verify capping :D
+    EXPECT_EQ(pid.calculate(20, 0), 10);  // Verify capping :D
 
     // Expect a call to get_time_us() to return 5555
     EXPECT_CALL(mock_clock, get_time_us()).WillOnce(Return(5555));
@@ -48,7 +48,7 @@ TEST(PIDTest, integral_gain_test) {
     // Expect a call to get_time_us() to return 20 * microseconds_per_second
     // Testing Integral windup capping
     EXPECT_CALL(mock_clock, get_time_us()).WillOnce(Return(20 * hal::MOCK_JupiterClock::microseconds_per_second));
-    EXPECT_EQ(pid.calculate(1.0, 1.75), -5); // Assume something is holding us 0.75 above the setpoint
+    EXPECT_EQ(pid.calculate(1.0, 1.75), -5);  // Assume something is holding us 0.75 above the setpoint
 
     // Expect a call to get_time_us() to return 3 * microseconds_per_second
     EXPECT_CALL(mock_clock, get_time_us()).WillOnce(Return(22 * hal::MOCK_JupiterClock::microseconds_per_second));
@@ -62,7 +62,7 @@ TEST(PIDTest, integral_gain_test) {
 TEST(PIDTest, derivative_gain_test) {
     hal::MOCK_JupiterClock mock_clock;
     PIDController<float> pid(0, 0, 1, -10, 10, 0, mock_clock);
-    
+
     EXPECT_EQ(pid.get_kd(), 1.0);
 
     // Expect a call to get_time_us() to return 1*basilisk_hal::HAL_CLOCK::kMicrosecondsPerSecond
@@ -103,7 +103,7 @@ TEST(PIDTest, MinOutputTest) {
 TEST(PIDTest, initialize_test) {
     hal::MOCK_JupiterClock mock_clock;
     PIDController<float> pid(1, 1.23, 0.96, -10, 10, 0, mock_clock);
-    
+
     EXPECT_EQ(pid.get_kp(), 1);
     EXPECT_EQ(pid.get_ki(), 1.23f);
     EXPECT_EQ(pid.get_kd(), 0.96f);
