@@ -22,7 +22,10 @@ T PIDController<T>::calculate(double set_point, double measurement) {
 
     // Prevent divide by 0
     if (math::float_equals(d_time, 0) == false) {
-        derivative = (error - prev_error) / d_time;
+        math::clamp(ema_strength, 0.0f, 1.0f);
+        // EMA Filter
+        // Discrete time, Low-pass, infinite impulse response (IIR)
+        derivative = ema_strength * ((error - prev_error) / d_time) + (1 - ema_strength) * derivative;
     }
 
     // Low pass filter?

@@ -16,16 +16,18 @@ class PIDController {
         T prev_error, prev_measurement;
         T max_output, min_output;
         uint32_t last_time;
+        float ema_strength;
     public:
     
-        PIDController(double kp, double ki, double kd, T min_output, T max_output, float integral_windup, hal::JupiterClock &clock)
+        PIDController(double kp, double ki, double kd, T min_output, T max_output, float integral_windup, float ema_strength, hal::JupiterClock &clock)
         :   kp(kp), ki(ki), kd(kd),
             integral_windup(integral_windup),
             integral(0), derivative(0),
             clock(clock),
             prev_error(0), prev_measurement(0),
             max_output(max_output), min_output(min_output),
-            last_time(0) {}
+            last_time(0),
+            ema_strength(ema_strength) {}
 
         /**
         * @brief Resets the PID controllers integral/error/clock

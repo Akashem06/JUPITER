@@ -7,7 +7,7 @@ using namespace ::testing;
 
 TEST(PIDTest, proportional_gain_test) {
     hal::MOCK_JupiterClock mock_clock;
-    PIDController<float> pid(1, 0, 0, -10, 10, 0, mock_clock);
+    PIDController<float> pid(1, 0, 0, -10, 10, 0, 0, mock_clock);
 
     EXPECT_EQ(pid.get_kp(), 1.0);
 
@@ -26,7 +26,7 @@ TEST(PIDTest, proportional_gain_test) {
 
 TEST(PIDTest, integral_gain_test) {
     hal::MOCK_JupiterClock mock_clock;
-    PIDController<float> pid(0, 1, 0, -10, 10, 5, mock_clock);
+    PIDController<float> pid(0, 1, 0, -10, 10, 5, 0, mock_clock);
 
     EXPECT_EQ(pid.get_ki(), 1.0);
 
@@ -61,30 +61,31 @@ TEST(PIDTest, integral_gain_test) {
 
 TEST(PIDTest, derivative_gain_test) {
     hal::MOCK_JupiterClock mock_clock;
-    PIDController<float> pid(0, 0, 1, -10, 10, 0, mock_clock);
+    PIDController<float> pid(0, 0, 1, -10, 10, 0, 0.75, mock_clock);
 
     EXPECT_EQ(pid.get_kd(), 1.0);
 
     // Expect a call to get_time_us() to return 1*basilisk_hal::HAL_CLOCK::kMicrosecondsPerSecond
     EXPECT_CALL(mock_clock, get_time_us()).WillOnce(Return(1 * hal::MOCK_JupiterClock::microseconds_per_second));
-    EXPECT_EQ(pid.calculate(1.0, 0.0), 1);
+    EXPECT_EQ(pid.calculate(1.0, 0.0), 0.75f);
 
     // Expect a call to get_time_us() to return 2*basilisk_hal::HAL_CLOCK::kMicrosecondsPerSecond
     EXPECT_CALL(mock_clock, get_time_us()).WillOnce(Return(3 * hal::MOCK_JupiterClock::microseconds_per_second));
-    EXPECT_EQ(pid.calculate(1, 0.8), -0.4f);
+    EXPECT_NEAR(pid.calculate(1, 0.85), -0.13125f, 0.00001f);
 
     // Expect a call to get_time_us() to return 3*basilisk_hal::HAL_CLOCK::kMicrosecondsPerSecond
     EXPECT_CALL(mock_clock, get_time_us()).WillOnce(Return(7 * hal::MOCK_JupiterClock::microseconds_per_second));
-    EXPECT_EQ(pid.calculate(1, 1.2), -0.1f);
+    EXPECT_NEAR(pid.calculate(1, 1.05), -0.0703125, 0.00000001f);
 
     // Expect a call to get_time_us() to return 4*basilisk_hal::HAL_CLOCK::kMicrosecondsPerSecond
+    // Since EMA Filter is relatively strong, the derivative term should not change drastically
     EXPECT_CALL(mock_clock, get_time_us()).WillOnce(Return(9 * hal::MOCK_JupiterClock::microseconds_per_second));
-    EXPECT_EQ(pid.calculate(1, 1.1), 0.05f);
+    EXPECT_NEAR(pid.calculate(1, 0.5), 0.188671, 0.000001f);
 }
 
 TEST(PIDTest, MaxOutputTest) {
     hal::MOCK_JupiterClock mock_clock;
-    PIDController<float> pid(1, 0, 0, -10, 10, 0, mock_clock);
+    PIDController<float> pid(1, 0, 0, -10, 10, 0, 0, mock_clock);
 
     // Expect a call to get_time_us() to return 1
     EXPECT_CALL(mock_clock, get_time_us()).WillOnce(Return(1));
@@ -93,7 +94,7 @@ TEST(PIDTest, MaxOutputTest) {
 
 TEST(PIDTest, MinOutputTest) {
     hal::MOCK_JupiterClock mock_clock;
-    PIDController<float> pid(1, 0, 0, -10, 10, 0, mock_clock);
+    PIDController<float> pid(1, 0, 0, -10, 10, 0, 0, mock_clock);
 
     // Expect a call to get_time_us() to return 1
     EXPECT_CALL(mock_clock, get_time_us()).WillOnce(Return(1));
@@ -102,7 +103,7 @@ TEST(PIDTest, MinOutputTest) {
 
 TEST(PIDTest, initialize_test) {
     hal::MOCK_JupiterClock mock_clock;
-    PIDController<float> pid(1, 1.23, 0.96, -10, 10, 0, mock_clock);
+    PIDController<float> pid(1, 1.23, 0.96, -10, 10, 0, 0, mock_clock);
 
     EXPECT_EQ(pid.get_kp(), 1);
     EXPECT_EQ(pid.get_ki(), 1.23f);
