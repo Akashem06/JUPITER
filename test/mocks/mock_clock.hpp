@@ -4,7 +4,7 @@
 #include "gmock/gmock.h"
 #include "clock.hpp"
 
-namespace hal {
+namespace HAL {
 
 class MOCK_JupiterClock : public JupiterClock {
    public:

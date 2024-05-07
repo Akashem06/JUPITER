@@ -2,7 +2,6 @@
 #define PID_CONTROL_HPP
 
 #include <iostream>
-#include "status.hpp"
 #include "clock.hpp"
 #include "math.hpp"
 
@@ -12,14 +11,14 @@ class PIDController {
         float kp, ki, kd;
         float integral_windup;
         float integral, derivative;
-        hal::JupiterClock &clock;
+        HAL::JupiterClock &clock;
         T prev_error, prev_measurement;
         T max_output, min_output;
         uint32_t last_time;
         float ema_strength;
     public:
     
-        PIDController(double kp, double ki, double kd, T min_output, T max_output, float integral_windup, float ema_strength, hal::JupiterClock &clock)
+        PIDController(double kp, double ki, double kd, T min_output, T max_output, float integral_windup, float ema_strength, HAL::JupiterClock &clock)
         :   kp(kp), ki(ki), kd(kd),
             integral_windup(integral_windup),
             integral(0), derivative(0),
@@ -44,16 +43,19 @@ class PIDController {
 
         /**
         * @brief Returns proportional gain in PID controller
+        * @return Proportional gain in PID Controller
          */
         float get_kp() const;
 
         /**
         * @brief Returns integral gain in PID controller
+        * @return Integral gain in PID Controller
          */
         float get_ki() const;
 
         /**
         * @brief Returns derivative gain in PID controller
+        * @return Derivative gain in PID Controller
          */
         float get_kd() const;
 

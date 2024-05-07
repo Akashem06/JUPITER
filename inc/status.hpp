@@ -15,7 +15,7 @@ typedef enum {
   JUPITER_INTERNAL_ERROR,
   JUPITER_INCOMPLETE,
   JUPITER_NUM_STATUS_CODES,
-} JUPITERStatus;
+} JupiterStatus;
 
 // Use to forward failures or continue on success.
 #define status_ok_or_return(code)          \
