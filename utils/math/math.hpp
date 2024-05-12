@@ -1,6 +1,8 @@
 #ifndef MATH_HPP
 #define MATH_HPP
 
+#include <math.h>
+
 namespace math {
 
 constexpr float FLOAT_ERROR_BUFFER = 0.000001f;

@@ -17,11 +17,4 @@ typedef enum {
   JUPITER_NUM_STATUS_CODES,
 } JupiterStatus;
 
-// Use to forward failures or continue on success.
-#define status_ok_or_return(code)          \
-  ({                                       \
-    __typeof__(code) status_expr = (code); \
-    if (status_expr) return status_expr;   \
-  })
-
 #endif
