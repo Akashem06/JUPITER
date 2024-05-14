@@ -32,7 +32,7 @@ void BLDC6StepControl::determine_inverter_duty_cycles(HW::MotorPhase::phase_cmd 
     float abs_speed = fabsf(motor_speed);
     math::clamp(abs_speed, 0.0f, 1.0f);
 
-    for (int i{0}; i < 3; i++) {
+    for (int i{ 0 }; i < 3; i++) {
         if (current_commutation_step.signals[i] == CommutationSignal::HIGH) {
             // 0.5f is the baseline for 0V supplied to the motor, since it is complementary a high will
             // drive the hi-mosfet and a low will drive the lo-mosfet. At 50% Duty cycle high and low will

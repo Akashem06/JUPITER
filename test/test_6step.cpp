@@ -65,5 +65,45 @@ TEST(SixStepCommutation, hall_sensor_test) {
 TEST(SixStepCommutation, phase_voltage_test) {}
 
 TEST(SixStepCommutation, motor_command_test) {
+    HW::MOCK_MotorPhase mock_motor;
 
+    EXPECT_CALL(mock_motor, init(HALL_SENSE_DISABLED)).WillOnce(Return(JUPITER_OK));
+    mock_motor.init(HALL_SENSE_DISABLED);
+
+    BLDC6StepControl six_step(mock_motor);
+
+    HW::MotorPhase::phase_cmd phase_command[HW::MotorPhase::NUM_PHASES];
+
+    six_step.determine_inverter_duty_cycles(phase_command, commutation_steps[0], 0.25f);
+
+    EXPECT_EQ(phase_command[0].duty_cycle, 0.625f);
+    EXPECT_EQ(phase_command[0].enable, true);
+
+    EXPECT_EQ(phase_command[1].duty_cycle, 0.0f);
+    EXPECT_EQ(phase_command[1].enable, true);
+
+    EXPECT_EQ(phase_command[2].duty_cycle, 0.0f);
+    EXPECT_EQ(phase_command[2].enable, false);
+
+    six_step.determine_inverter_duty_cycles(phase_command, commutation_steps[1], 1.0f);
+
+    EXPECT_EQ(phase_command[0].duty_cycle, 1.0f);
+    EXPECT_EQ(phase_command[0].enable, true);
+
+    EXPECT_EQ(phase_command[1].duty_cycle, 0.0f);
+    EXPECT_EQ(phase_command[1].enable, false);
+
+    EXPECT_EQ(phase_command[2].duty_cycle, 0.0f);
+    EXPECT_EQ(phase_command[2].enable, true);
+
+    six_step.determine_inverter_duty_cycles(phase_command, commutation_steps[2], 0.5f);
+
+    EXPECT_EQ(phase_command[0].duty_cycle, 0.0f);
+    EXPECT_EQ(phase_command[0].enable, false);
+
+    EXPECT_EQ(phase_command[1].duty_cycle, 0.75f);
+    EXPECT_EQ(phase_command[1].enable, true);
+
+    EXPECT_EQ(phase_command[2].duty_cycle, 0.0f);
+    EXPECT_EQ(phase_command[2].enable, true);
 }
